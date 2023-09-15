@@ -1,0 +1,44 @@
+@media screen and (min-width: 652px) {
+    body{
+        gap: 5vh;
+    }
+
+    .timer-question{
+        flex-direction: row;
+        gap: 5vw
+    }
+
+    .timer div {
+        margin: auto;
+        width: 30vw; 
+        height: 30vw;
+        max-width: 500px;
+        max-height: 500px;
+        border: solid 1rem var(--tomato);
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .timer p {
+        font-size: 35px;
+    }
+
+    .choice{
+        width: 13vw;
+        min-width: 100px;
+    }
+
+    .special-btn{
+        padding: 20px 120px;
+        border: none;
+        border-radius: 1.5rem;
+    }
+
+    .end-btn{
+        padding: 5px;
+        border-radius: 8px;
+    }
+
+}

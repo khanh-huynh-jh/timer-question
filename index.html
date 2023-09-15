@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Question Timer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/desktop-tablet.css">
+</head>
+
+<body>
+    <section>
+        <button class="special-btn end-btn">
+            <img src="./assets/stop-icon-white.svg">
+        </button>
+    </section>
+    <section class="timer-question">
+        <section class="timer">
+            <div>
+                <p>00:00:00</p>
+            </div>
+        </section>
+        <section class="hidden activated" id="question-answer-area">
+            <section class="question-area">
+                <p> Question Here! </p>
+            </section>
+            <section class="answer-area">
+                <textarea placeholder="Answer here" id="user-answer"></textarea>
+                <button class="btn">
+                    <img src="./assets/stop-icon.svg">
+                </button>
+                <button class="btn" id="reset-btn">
+                    <img src="./assets/reset-icon.svg">
+                </button>
+            </section>
+            <section class="answer-area" style="display: none;">
+                <div class="choices-panel">
+                    <div class="choice">
+                        <p>Choice</p>
+                    </div>
+                    <div class="choice">
+                        <p>Choice</p>
+                    </div>
+                    <div class="choice">
+                        <p>Choice</p>
+                    </div>
+                    <div class="choice">
+                        <p>Choice</p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn">
+                        <img src="./assets/stop-icon.svg">
+                    </button>
+                    <button class="btn" id="reset-btn">
+                        <img src="./assets/reset-icon.svg">
+                    </button>
+                </div>
+                
+            </section>
+        </section>
+    </section>
+
+    <section class="initial">
+        <button class="special-btn" id="start-btn">
+            <img src="./assets/start-icon.svg">
+        </button>
+    </section>
+    <script src="./js/modules.js"></script>
+    <script src="./js/index.js" async defer></script>
+</body>
+
+</html>
