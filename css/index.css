@@ -84,6 +84,25 @@ body {
     min-width: 80px;
 }
 
+.result-area{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-area img{
+    width: 50px;
+}
+
+.result-area div{
+    color: var(--dark-navy);
+    background-color: var(--tomato);
+    border-radius: 10px;
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+}
+
 .hidden{
     display: none;
 }
@@ -97,4 +116,5 @@ body {
     display: flex;
     justify-content: center;
 }
+
 
