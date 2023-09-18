@@ -1,0 +1,40 @@
+.btn{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+.btn:hover{
+    background-color: var(--light-grey);
+}
+
+.btn img{
+    width: 50px;
+}
+
+.special-btn{
+    background-color: var(--tomato);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 1rem;
+}
+
+.special-btn:hover{
+    background-color: var(--tomato-light);
+}
+
+.special-btn img{
+    width: auto;
+}
+
+.end-btn{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.btn-group{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
