@@ -13,7 +13,7 @@
 
 <body>
     <section>
-        <button class="special-btn end-btn">
+        <button class="special-btn end-btn" id="end-btn">
             <img src="./assets/stop-icon-white.svg">
         </button>
     </section>
@@ -24,19 +24,19 @@
             </div>
         </section>
         <section class="hidden activated" id="question-answer-area">
-            <section class="question-area" style="display: none;">
+            <section class="question-area">
                 <p> Question Here! </p>
             </section>
-            <section class="answer-area" style="display:none">
+            <section class="answer-area" id="free-answer">
                 <textarea placeholder="Answer here" id="user-answer"></textarea>
-                <button class="btn">
+                <button class="btn" id="stop-btn">
                     <img src="./assets/stop-icon.svg">
                 </button>
                 <button class="btn" id="reset-btn">
                     <img src="./assets/reset-icon.svg">
                 </button>
             </section>
-            <section class="answer-area" style="display: none;">
+            <section class="answer-area" style="display: none;" id="multiple-choice-answer">
                 <div class="choices-panel">
                     <div class="choice">
                         <p>Choice</p>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="btn-group">
-                    <button class="btn">
+                    <button class="btn" id="stop-btn">
                         <img src="./assets/stop-icon.svg">
                     </button>
                     <button class="btn" id="reset-btn">
@@ -62,7 +62,7 @@
                 
             </section>
 
-            <section class="result-area">
+            <section class="result-area" style="display: none;">
                 <div>
                     <p>10/15</p>
                 </div>

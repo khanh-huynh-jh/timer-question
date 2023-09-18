@@ -1,10 +1,7 @@
-class TimeBuffer {
-    constructor(hours = 0, minutes = 0, seconds = 0){
-        this.hours = hours;
-        this.minutes = minutes;
-        this.seconds =  seconds;
-    }
-}
+const FIRST_QUESTION_ID = '1';
+const END_OF_QUESTIONAIRE = -1;
+const MULTIPLE_CHOICE_QUESTION = 'multi';
+const FREE_QUESTION = 'free';
 
 class Timer {
     constructor() {
@@ -15,7 +12,7 @@ class Timer {
         this.isTiming = false;
     }
 
-    start(buffer) {
+    start() {
         this.isTiming = true;
         const interval = setInterval(() => {
             if (this.seconds < 59) {
@@ -32,9 +29,6 @@ class Timer {
             if (!this.isTiming) {
                 clearInterval(interval);
             }
-            buffer.hours = this.hours.toString().padStart(2, '0');
-            buffer.minutes = this.minutes.toString().padStart(2, '0');
-            buffer.seconds = this.seconds.toString().padStart(2, '0');
 
         }, 1000);
         return this;
@@ -43,4 +37,88 @@ class Timer {
     stop() {
         this.isTiming = false;
     }
+
+    reset() {
+        this.isTiming = false;
+        this.hours = 0;
+        this.minutes = 0;
+        this.seconds = 0;
+    }
+
+    getTime() {
+        const hour = this.hours.toString().padStart(2, '0');
+        const minute = this.minutes.toString().padStart(2, '0');
+        const second = this.seconds.toString().padStart(2, '0');
+        return `${hour}:${minute}:${second}`
+    }
 }
+
+class Question {
+    constructor({ id, content, type, nextQuestion }) {
+        this.id = id;
+        this.content = content;
+        this.type = type;
+        this.nextQuestion = nextQuestion
+        this.answer = '';
+    }
+
+    getNextQuestionId() {
+        switch (this.type) {
+            case MULTIPLE_CHOICE_QUESTION:
+                return this.nextQuestion[this.answer]
+            case FREE_QUESTION:
+                return this.nextQuestion
+        }
+    }
+
+    getContent() {
+        return this.content;
+    }
+
+    saveAnswer() {
+        this.answer = userAnswer;
+    }
+}
+
+// New code
+
+const questionDict = {};
+
+const importQuestionaire = (path) => {
+    const questions = require(path);
+    for (question of questions) {
+        questionDict[question.id] = new Question(question)
+    }
+}
+
+
+function* initQuestionaire(options = {}) {
+    const {
+        firstQuestionid = FIRST_QUESTION_ID,
+        endOfQuestionId = END_OF_QUESTIONAIRE
+    } = options;
+
+    let currentQuestionId = firstQuestionid;
+    while (currentQuestionId !== endOfQuestionId) {
+        const {
+            getContent,
+            saveAnswer,
+            getNextQuestionId
+        } = questionaire.questionDict[currentQuestionId];
+
+        yield [getContent, saveAnswer];
+
+        currentQuestionId = getNextQuestionId();
+    }
+}
+
+const questionaireInterface = {
+    import: importQuestionaire,
+    init: initQuestionaire
+}
+
+// module.exports = questionaireInterface;
+
+
+
+
