@@ -11,10 +11,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 
+app.use(express.json())
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(3000, () => {
-    console.log("Application started and Listening on port 3000");
+app.listen(3002, () => {
+    console.log("Application started and Listening on port 3002");
 });
 
 
@@ -23,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 
-let answer;
+let userAnswer;
 
 app.get("/data", (req, res) => {
     const nextQuestion = questionGenerator.next();
@@ -31,11 +33,14 @@ app.get("/data", (req, res) => {
         res.send({done:true});
     }else{
         const [question, answer] = nextQuestion.value;
+        userAnswer = answer;
         res.send(question);
     }
 });
 
 app.post("/answer", (req, res) => {
-  console.log(req.json());
+  userAnswer.userAnswer = req.body.answer
+  console.log(userAnswer)
+  res.send("Save answer succeed.")
 })
 

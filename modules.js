@@ -65,6 +65,7 @@ function* initQuestionaire(options = {}) {
         ];
         questionDict[currentQuestionId].saveAnswer(answer.userAnswer);
         currentQuestionId = questionDict[currentQuestionId].getNextQuestionId();
+        
     }
 
 
