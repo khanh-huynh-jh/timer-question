@@ -1,9 +1,10 @@
+import {
+    END_OF_QUESTIONAIRE,
+    FIRST_QUESTION_ID,
+    FREE_QUESTION,
+    MULTIPLE_CHOICE_QUESTION
+} from './public/js/config.js';
 import { questions } from './data.js';
-
-const FIRST_QUESTION_ID = '1';
-const END_OF_QUESTIONAIRE = -1;
-const MULTIPLE_CHOICE_QUESTION = 'multi';
-const FREE_QUESTION = 'free';
 
 class Question {
     constructor({ id, content, type, nextQuestion, answerSet }) {
@@ -33,19 +34,25 @@ class Question {
     }
 }
 
-const questionDict = {};
-
-const importQuestionaire = () => {
-    for (const question of questions) {
-        questionDict[question.id] = new Question(question);
+class Questionaire {
+    constructor(options = {}) {
+        const {
+            path,
+            firstQuestionid = FIRST_QUESTION_ID,
+            endOfQuestionId = END_OF_QUESTIONAIRE
+        } = options;
+        this.path = path;
+        this.questionDict = {}
+        const questions = require(this.path)
+        for (const question of questions) {
+            questionDict[question.id] = new Question(question);
+        }
     }
+
+
 }
 
 function* initQuestionaire(options = {}) {
-    const {
-        firstQuestionid = FIRST_QUESTION_ID,
-        endOfQuestionId = END_OF_QUESTIONAIRE
-    } = options;
 
 
     let currentQuestionId = firstQuestionid;
@@ -58,16 +65,13 @@ function* initQuestionaire(options = {}) {
             {
                 content: questionDict[currentQuestionId].getContent(),
                 type: questionDict[currentQuestionId].type,
-                id: questionDict[currentQuestionId].id,
                 answerSet: questionDict[currentQuestionId].answerSet
             },
             answer
         ];
         questionDict[currentQuestionId].saveAnswer(answer.userAnswer);
         currentQuestionId = questionDict[currentQuestionId].getNextQuestionId();
-        
     }
-
 
 }
 

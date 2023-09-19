@@ -1,0 +1,4 @@
+const FIRST_QUESTION_ID = '1';
+const END_OF_QUESTIONAIRE = -1;
+const MULTIPLE_CHOICE_QUESTION = 'multi';
+const FREE_QUESTION = 'free';

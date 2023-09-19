@@ -1,114 +1,151 @@
-const startBtn = document.getElementById("start-btn");
-const resetBtn = document.getElementById("reset-btn");
-const stopBtn = document.getElementById("end-btn");
-const checkBtn = document.getElementById("check-btn");
-const questionAnswerArea = document.getElementById("question-answer-area");
-const resultArea = document.getElementById("result-area");
-const freeAnswer = document.getElementById("free-answer");
-const multipleChoice = document.getElementById("multiple-choice-answer");
-const userAnswer = document.getElementById("user-answer");
-const clock = document.querySelector(".timer p");
-const questionElement = document.querySelector(".question-area p");
-const choicesPanel = document.querySelector(".choices-panel");
-
-const timer = new Timer();
-
-let interval;
-let choices;
-let selectedChoice;
-
-const question = {
-    content: "",
-    type: "",
-    id: "",
-    answerSet: ""
-};
-
-const fetchQuestion = () => {
-    fetch("/data").then((res) => res.json()).then((data) => {
-        if (data.done) {
-            resultArea.classList.remove("hidden");
-            userAnswer.classList.add("hidden");
-            multipleChoice.classList.add("hidden");
-            document.querySelector(".question-area").classList.add("hidden")
-            stopBtn.click();
-        }
-        else {
-            question.content = data.content;
-            question.id = data.id;
-            question.type = data.type;
-            question.answerSet = data.answerSet;
-            questionElement.innerText = question.content;
-
-            if (question.type === "free") {
-                freeAnswer.classList.remove("hidden")
-                multipleChoice.classList.add("hidden")
-            } else {
-                freeAnswer.classList.add("hidden")
-                multipleChoice.classList.remove("hidden")
-                choicesPanel.innerHTML = ''
-                for (i in question.answerSet) {
-                    choicesPanel.innerHTML = choicesPanel.innerHTML + `
-                    <div class="choice">
-                        ${question.answerSet[i]}
-                    </div>
-                `
-                }
-                const elements = document.getElementsByClassName("choice")
-                for (element of elements) {
-                    element.addEventListener("click", () => {
-                        selectedChoice = element.innerText;
-                        checkBtn.click();
-                    })
-                }
-
-            }
-        }
-    })
+const UIObjects = {
+    startBtn: document.getElementById("start-btn"),
+    resetBtns: document.getElementsByClassName("reset-btn"),
+    stopBtn: document.getElementById("end-btn"),
+    checkBtn: document.getElementById("check-btn"),
+    questionAnswerArea: document.getElementById("question-answer-area"),
+    resultArea: document.getElementById("result-area"),
+    freeAnswer: document.getElementById("free-answer"),
+    multipleChoice: document.getElementById("multiple-choice-answer"),
+    userAnswer: document.getElementById("user-answer"),
+    clock: document.querySelector(".timer p"),
+    questionElement: document.querySelector(".question-area p"),
+    choicesPanel: document.querySelector(".choices-panel"),
 }
 
-startBtn.addEventListener('click', () => {
-    questionAnswerArea.classList.toggle("hidden");
-    startBtn.classList.toggle("hidden");
 
+const timer = new Timer();
+let questionaire;
+getQuestionData(questionaire).then((data) => {
+    questionaire = new Questionaire({ questions: data })
+});
+
+let interval;
+let selectedChoice;
+
+UIObjects.startBtn.addEventListener('click', () => {
+    if (!questionaire) {
+        return;
+    }
+    showQuestionAnswerArea(UIObjects)
+    runQuestionaireUI(UIObjects);
     interval = setInterval(() => {
-        clock.innerText = timer.getTime();
+        UIObjects.clock.innerText = timer.getTime();
     }, 1000);
 
     timer.start();
-    fetchQuestion();
 });
 
-checkBtn.addEventListener("click", () => {
 
-    fetch("/answer", {
-        method: "POST",
-        headers: {
-            "Content-Type": 'application/json',
-        },
-        body: JSON.stringify({
-            answer: question.type === "free" ? userAnswer.value : selectedChoice
-        }),
-    }).then((res) => {
-        console.log("Success")
-    });
-
-    fetchQuestion();
+UIObjects.checkBtn.addEventListener("click", () => {
+    submitAnswer(UIObjects.userAnswer.value, UIObjects)
+    UIObjects.userAnswer.value = "";
 })
 
-resetBtn.addEventListener('click', () => {
-    questionAnswerArea.classList.toggle("hidden");
-    startBtn.classList.toggle("hidden");
-    clearInterval(interval);
-    timer.reset();
-    clock.innerText = "00:00:00";
-});
+for (btn of UIObjects.resetBtns) {
+    btn.addEventListener('click', () => {
+        window.location.href = '/'
+    })
+};
 
-stopBtn.addEventListener('click', () => {
+UIObjects.stopBtn.addEventListener('click', () => {
     timer.stop();
     clearInterval(interval);
 });
 
 
 
+async function getQuestionData() {
+    const response = await fetch("/question/data");
+    const data = await response.json();
+    return data
+}
 
+function showQuestionAnswerArea(options = {}) {
+    const {
+        questionAnswerArea,
+        startBtn
+    } = options;
+    questionAnswerArea.classList.toggle("hidden");
+    startBtn.classList.toggle("hidden");
+}
+
+function showQuestionUI(question, options = {}) {
+    const {
+        freeAnswer,
+        multipleChoice,
+        choicesPanel,
+        questionElement
+    } = options
+
+    questionElement.innerText = question.content
+
+    if (question.type === FREE_QUESTION) {
+        freeAnswer.classList.remove("hidden")
+        multipleChoice.classList.add("hidden")
+    } else {
+        freeAnswer.classList.add("hidden")
+        multipleChoice.classList.remove("hidden")
+        choicesPanel.innerHTML = ''
+
+        const choiceElementClass = "choice"
+
+        for (i in question.answerSet) {
+            generateChoiceElement({
+                parent: choicesPanel,
+                choice: question.answerSet[i],
+                elementClass: choiceElementClass,
+                UIObjects: options
+            })
+        }
+    }
+}
+
+function runQuestionaireUI(options = UIObjects) {
+    if (questionaire.isCompleted()) {
+        showResultUI(options);
+    }
+    else {
+        const question = questionaire.getQuestion();
+        showQuestionUI(question, options)
+    }
+}
+
+function generateChoiceElement(options = {}) {
+    const {
+        parent,
+        choice,
+        elementClass,
+        UIObjects
+    } = options;
+
+    const newElement = document.createElement('div');
+    newElement.classList.add(elementClass);
+    newElement.innerHTML = choice;
+
+    newElement.addEventListener('click', (e) => {
+        submitAnswer(e.target.innerText, UIObjects);
+    })
+
+    parent.appendChild(newElement);
+}
+
+function showResultUI(options = {}){
+    const {
+        resultArea,
+        multipleChoice,
+        freeAnswer,
+        stopBtn
+    } = options;
+    resultArea.classList.remove("hidden");
+    multipleChoice.classList.add("hidden");
+    freeAnswer.classList.add("hidden");
+    document.querySelector(".question-area").classList.add("hidden")
+    stopBtn.click();
+}
+
+function submitAnswer(answer, UIObjects){
+    questionaire.saveAnswer(answer)
+    questionaire.goToNextQuestion();
+    runQuestionaireUI(UIObjects);
+}
