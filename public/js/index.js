@@ -50,4 +50,8 @@ for (btn of UIObjects.resetBtns) {
 UIObjects.stopBtn.addEventListener('click', () => {
     timer.stop();
     clearInterval(interval);
+    buttons = document.querySelectorAll("button:not(.reset-btn)")
+    for (button of buttons){
+        button.disabled = true;
+    }
 });

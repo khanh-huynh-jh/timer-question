@@ -61,11 +61,11 @@ class Questionaire {
     goToNextQuestion(){
         try{
             if (this.answer){
-                throw new Error('Answer is undefined')
+                throw new Error('Can not go to next question. Answer is undefined.')
             }
             this.currentQuestionId = this.questionDict[this.currentQuestionId].getNextQuestionId()
             if (this.isCompleted()){
-                throw new Error('Questionaire is completed')
+                throw new Error('No question left')
             }
         }catch(e){
            console.log(e)
