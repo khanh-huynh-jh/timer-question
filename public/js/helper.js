@@ -13,7 +13,7 @@ function showQuestionAnswerArea(options = {}) {
     startBtn.classList.toggle("hidden");
 }
 
-function showQuestionUI(question, options = {}) {
+function generateQuestionUI(question, options = {}) {
     const {
         freeAnswer,
         multipleChoice,
@@ -49,11 +49,11 @@ function showQuestionUI(question, options = {}) {
 
 function runQuestionaireUI(options = {}) {
     if (questionaire.isCompleted()) {
-        showResultUI(options);
+        showResult(options);
     }
     else {
         const question = questionaire.getQuestion();
-        showQuestionUI(question, options)
+        generateQuestionUI(question, options)
     }
 }
 
@@ -76,7 +76,7 @@ function generateChoiceElement(options = {}) {
     parent.appendChild(newElement);
 }
 
-function showResultUI(options = {}){
+function showResult(options = {}){
     const {
         resultArea,
         multipleChoice,
