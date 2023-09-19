@@ -18,12 +18,14 @@ function showQuestionUI(question, options = {}) {
         freeAnswer,
         multipleChoice,
         choicesPanel,
-        questionElement
+        questionElement,
+        checkBtn
     } = options
 
     questionElement.innerText = question.content
 
     if (question.type === FREE_QUESTION) {
+        checkBtn.disabled = false;
         freeAnswer.classList.remove("hidden")
         multipleChoice.classList.add("hidden")
     } else {
@@ -41,6 +43,7 @@ function showQuestionUI(question, options = {}) {
                 UIObjects: options
             })
         }
+        checkBtn.disabled = true;
     }
 }
 
